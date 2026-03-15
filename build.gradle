@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
+    testImplementation 'io.appium:java-client:10.0.0'
+    implementation 'org.seleniumhq.selenium:selenium-grid:4.35.0'
+
+}
+
+test {
+    useJUnitPlatform()
+}
