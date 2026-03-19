@@ -2,9 +2,9 @@ package base;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
-import lombok.Getter;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import pages.JavaPage;
 import pages.MainPage;
 import pages.SearchPage;
@@ -14,7 +14,6 @@ import java.net.URL;
 
 public class BaseTest {
 
-    @Getter
     protected static AndroidDriver driver;
 
     private MainPage mainPage;
@@ -31,17 +30,27 @@ public class BaseTest {
                 .setPlatformVersion("16.0")
                 .setAppPackage("org.wikipedia")
                 .setAppActivity("org.wikipedia.main.MainActivity")
-                .setNoReset(true);
+                .setNoReset(false);
 
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), options);
     }
 
-    @AfterAll
-    public static void tearDown() {
+    @BeforeEach
+    public void skipClickBtn(){
+       getMainPage().clickSkipBtnFirstPage();
+       getMainPage().closeBannerIfPresent();
+    }
+
+    @AfterEach
+    public void tearDown() {
         if(driver != null) {
             driver.quit();
         }
+    }
+
+    public static AndroidDriver getDriver() {
+        return driver;
     }
 
     protected MainPage getMainPage() {

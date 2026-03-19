@@ -30,4 +30,12 @@ public class WikiTest extends BaseTest {
         getMainPage().sendKeys("Java");
         getMainPage().clearInput();
     }
+
+    @Test
+    @Description("Проверка наличия слова 'Java' в результатах поиска")
+    public void checkSearchResultJava() {
+        getMainPage().clickSearch();
+        getMainPage().sendKeys("Java");
+        getSearchPage().checkTextJava();
+    }
 }
