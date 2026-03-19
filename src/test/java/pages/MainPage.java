@@ -1,0 +1,39 @@
+package pages;
+
+import io.appium.java_client.android.AndroidDriver;
+import jdk.jfr.Description;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+public class MainPage extends BasePage {
+
+    private final By searchInput = By.xpath("//*[@text='Search Wikipedia']");
+    private final By backBtnMainPage = By.xpath("//*[@content-desc='Navigate up']");
+    private final By searchInputResultPage = By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']");
+
+
+    public MainPage(AndroidDriver driver) {
+        super(driver);
+    }
+
+    @Description("Ожидание кликабельности и клик")
+    public void clickSearch() {
+        clickElement(searchInput);
+    }
+
+    @Description("Ввод значения в поле поиска")
+    public void sendKeys(String text) {
+        sendValue(searchInput, text);
+    }
+
+    @Description("Клик по кнопке Назад в поле поиска")
+    public void clickBackBtn() {
+        clickElement(backBtnMainPage);
+    }
+
+    @Description("Очищает поле поиска")
+    public void clearInput() {
+        WebElement el = driver.findElement(searchInputResultPage);
+        el.clear();
+    }
+}

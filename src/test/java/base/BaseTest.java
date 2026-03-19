@@ -1,20 +1,25 @@
+package base;
+
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
+import lombok.Getter;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.JavaPage;
+import pages.MainPage;
+import pages.SearchPage;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Duration;
 
 public class BaseTest {
 
+    @Getter
     protected static AndroidDriver driver;
+
+    private MainPage mainPage;
+    private SearchPage searchPage;
+    private JavaPage javaPage;
 
     @BeforeAll
     public static void setUp() throws MalformedURLException {
@@ -39,28 +44,24 @@ public class BaseTest {
         }
     }
 
-    @Test
-    public void firstTest() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        WebElement element = driver.findElement(By.xpath("//*[@text='Search Wikipedia']"));
-        element.click();
-
-        WebElement searchField = wait.until(
-                ExpectedConditions.elementToBeClickable(By.xpath("//*[@text='Search Wikipedia']"))
-        );
-        searchField.sendKeys("Portugal");
-        System.out.println("First test run");
+    protected MainPage getMainPage() {
+        if (mainPage == null) {
+            mainPage = new MainPage(driver);
+        }
+        return mainPage;
     }
 
-
-    public int test(int year) {
-        int century = year - 1 / 100;
-        return century;
-    }
-    @Test
-    public void run(){
-        System.out.println(test(2010));
+    protected SearchPage getSearchPage() {
+        if (searchPage == null) {
+            searchPage = new SearchPage(driver);
+        }
+        return searchPage;
     }
 
+    protected JavaPage getJavaPage() {
+        if(javaPage == null) {
+            javaPage = new JavaPage(driver);
+        }
+        return javaPage;
+    }
 }

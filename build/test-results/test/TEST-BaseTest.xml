@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="BaseTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-03-15T09:19:29" hostname="H0N0RB00K" time="3.655">
-  <properties/>
-  <testcase name="firstTest()" classname="BaseTest" time="3.655"/>
-  <system-out><![CDATA[First test run
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
