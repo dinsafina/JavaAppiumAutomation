@@ -5,6 +5,7 @@ import io.appium.java_client.android.options.UiAutomator2Options;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import pages.AppiumPage;
 import pages.JavaPage;
 import pages.MainPage;
 import pages.SearchPage;
@@ -19,6 +20,7 @@ public class BaseTest {
     private MainPage mainPage;
     private SearchPage searchPage;
     private JavaPage javaPage;
+    private AppiumPage appiumPage;
 
     @BeforeAll
     public static void setUp() throws MalformedURLException {
@@ -39,7 +41,7 @@ public class BaseTest {
     @BeforeEach
     public void skipClickBtn(){
        getMainPage().clickSkipBtnFirstPage();
-       getMainPage().closeBannerIfPresent();
+       getMainPage().closeBtnIfPresent();
     }
 
     @AfterEach
@@ -72,5 +74,12 @@ public class BaseTest {
             javaPage = new JavaPage(driver);
         }
         return javaPage;
+    }
+
+    protected AppiumPage getAppiumPage() {
+        if(appiumPage == null) {
+            appiumPage = new AppiumPage(driver);
+        }
+        return appiumPage;
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="tests.WikiTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-03-19T14:16:23" hostname="H0N0RB00K" time="30.674">
+  <properties/>
+  <testcase name="scrollToElementTest()" classname="tests.WikiTest" time="30.674"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

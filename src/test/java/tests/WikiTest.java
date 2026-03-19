@@ -17,6 +17,26 @@ public class WikiTest extends BaseTest {
     }
 
     @Test
+    @Description("Простая прокрутка страницы вниз")
+    public void scrollJavaArticleTest() {
+        getMainPage().clickSearch();
+        getMainPage().sendKeys("Java");
+        getSearchPage().oopJavaResultClick();
+        getJavaPage().closeBtnIfPresent();
+        getJavaPage().swipeUpJavaPage();
+    }
+
+    @Test
+    @Description("Прокрутка страницы до нужного элемента")
+    public void scrollToElementTest() {
+        getMainPage().clickSearch();
+        getMainPage().sendKeys("Appium");
+        getSearchPage().appiumResultClick();
+        getJavaPage().closeBtnIfPresent();
+        getAppiumPage().scrollToFooterElement();
+    }
+
+    @Test
     @Description("Клик по кнопке Назад в поле ввода поиска по тексту")
     public void clickBtnBackInputSearch() {
         getMainPage().clickSearch();

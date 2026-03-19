@@ -12,8 +12,6 @@ public class MainPage extends BasePage {
     private final By searchInputResultPage = By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']");
 
     private final By skipBtn =  By.xpath("//*[@resource-id='org.wikipedia:id/fragment_onboarding_skip_button']");
-    private final By closeBtn =  By.xpath("//*[@resource-id='org.wikipedia:id/closeButton']");
-
 
     public MainPage(AndroidDriver driver) {
         super(driver);
@@ -22,16 +20,6 @@ public class MainPage extends BasePage {
     @Description("Клик по кнопке 'Skip' после запуска приложения")
     public void clickSkipBtnFirstPage() {
         clickElement(skipBtn);
-    }
-
-    @Description("Закрыть баннер при его наличии")
-    public void closeBannerIfPresent() {
-        clickIfVisibleAndClickable(closeBtn, 5);
-    }
-
-    @Description("Закрывает модальное окно при наличии")
-    public void closeBtnClickIfPresent() {
-        clickElement(closeBtn);
     }
 
     @Description("Ожидание кликабельности и клик")
