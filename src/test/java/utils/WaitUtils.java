@@ -2,6 +2,7 @@ package utils;
 
 import base.BaseTest;
 import io.appium.java_client.android.AndroidDriver;
+import jdk.jfr.Description;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -46,7 +47,7 @@ public class WaitUtils {
         }
     }
 
-    /*Ожидание исчезновения элемента на странице*/
+    @Description("Ожидание исчезновения элемента на странице")
     public static void waitForElementNotPresent(By locator, long timeoutSeconds) {
         new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds))
                 .withMessage("Элемент всё ещё присутствует/видим → " + locator)
@@ -65,7 +66,7 @@ public class WaitUtils {
         }
     }
 
-    private static WebElement waitForVisible(By locator, long timeoutSeconds, String message) {
+    public static WebElement waitForVisible(By locator, long timeoutSeconds, String message) {
         try {
             return new WebDriverWait(getDriver(), Duration.ofSeconds(timeoutSeconds))
                     .until(ExpectedConditions.visibilityOfElementLocated(locator));

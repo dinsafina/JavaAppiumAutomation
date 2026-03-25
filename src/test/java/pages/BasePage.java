@@ -3,10 +3,8 @@ package pages;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import jdk.jfr.Description;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -17,6 +15,7 @@ import java.time.Duration;
 import java.util.Collections;
 
 import static base.BaseTest.getDriver;
+import static utils.WaitUtils.waitForVisible;
 
 public class BasePage {
     protected AndroidDriver driver;
@@ -43,10 +42,6 @@ public class BasePage {
         driver.findElement(locator).sendKeys(text);
     }
 
-    protected String getText(By locator) {
-        return driver.findElement(locator).getText();
-    }
-
     @Description("Клик по элементу если он есть")
     private void clickIfVisibleAndClickable(By locator, int timeoutSeconds) {
         try {
@@ -61,8 +56,20 @@ public class BasePage {
 
     @Description("Закрывает модальное окно при наличии")
     public void closeBtnIfPresent() {
-        final By closeBtn =  By.xpath("//*[@resource-id='org.wikipedia:id/closeButton']");
+        final By closeBtn = By.xpath("//*[@resource-id='org.wikipedia:id/closeButton']");
         clickIfVisibleAndClickable(closeBtn, 5);
+    }
+
+    @Description("Кликает на кнопку 'Got it' при наличии")
+    public void gotItClickIfPresent() {
+        final By gotIt = By.xpath("//*[@text='Got it']");
+        clickIfVisibleAndClickable(gotIt, 5);
+    }
+
+    @Description("Получение текста локатора с ожиданием")
+    protected String getText(By locator, int timeoutSeconds, String message) {
+        WebElement element = waitForVisible(locator, timeoutSeconds, message);
+        return element.getText();
     }
 
 
@@ -119,9 +126,11 @@ public class BasePage {
         //палец коснулся экрана
         swipe.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
 
-        //свайп вниз
+        swipe.addAction(new Pause(finger, Duration.ofMillis(180)));
+
+        //свайп вниз/вверх/вправо/влево
         swipe.addAction(finger.createPointerMove(
-                Duration.ofMillis(500),
+                Duration.ofMillis(750),
                 PointerInput.Origin.viewport(),
                 endX,
                 endY
@@ -130,12 +139,14 @@ public class BasePage {
         //палец оторвался от экрана
         swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
 
+        swipe.addAction(new Pause(finger, Duration.ofMillis(150)));
+
         //Appium проигрывает все действия как одно движение
         driver.perform(Collections.singletonList(swipe));
     }
 
     @Description("Скролл до определенного элемента через текст")
-    public WebElement scrollToElementByText(String text) {
+    protected WebElement scrollToElementByText(String text) {
         return driver.findElement(AppiumBy.androidUIAutomator(
                 "new UiScrollable(new UiSelector().scrollable(true))" +
                         ".scrollIntoView(new UiSelector().text(\"" + text + "\"))"
@@ -143,12 +154,95 @@ public class BasePage {
     }
 
     @Description("Скролл через локатор")
-    public void swipeUntilElementVisible(By locator, int maxSwipes, boolean swipeUp) {
+    protected void swipeUntilElementVisible(By locator, int maxSwipes, boolean swipeUp) {
         int count = 0;
         while (driver.findElements(locator).isEmpty() && count < maxSwipes) {
             if (swipeUp) swipeUp();
             else swipeDown();
             count++;
         }
+    }
+
+    @Description("Свайп влево")
+    protected void swipeLeft() {
+        Dimension size = driver.manage().window().getSize();
+
+        int y = size.height / 2;
+
+        int startX = (int) (size.width * 0.8); // справа
+        int endX = (int) (size.width * 0.2);   // слева
+
+        if (startX <= endX) {
+            throw new IllegalArgumentException("SwipeLeft: startX must be greater than endX");
+        }
+        performSwipe(startX, y, endX, y);
+    }
+
+    @Description("Свайп влево по элементу")
+    protected void swipeLeftOnElement(By locator) {
+        WebElement element = driver.findElement(locator);
+
+        Point location = element.getLocation();
+        Dimension size = element.getSize();
+
+        int startX = location.getX() + (int) (size.getWidth() * 0.82);
+        int endX = location.getX() + (int) (size.getWidth() * 0.12);
+
+        int y = (int) (location.getY() + size.getHeight() * 0.5);
+
+        // Если элемент слишком узкий — делаем свайп почти от края до края
+        if (size.getWidth() < 450) {
+            startX = location.getX() + (int) (size.getWidth() * 0.9);   // почти правый край
+            endX = location.getX() + (int) (size.getWidth() * 0.08);  // почти левый край
+        }
+
+        //System.out.println("Swipe from (" + startX + ", " + y + ") to (" + endX + ", " + y + ")");
+
+        performSwipe(startX, y, endX, y);
+    }
+
+    @Description("Свайп влево по элементу")
+    protected void swipeLeftOnElement2(By locator) {
+        WebElement element = driver.findElement(locator);
+
+        Point location = element.getLocation();
+        Dimension size = element.getSize();
+
+        int startX = location.getX() + (int) (size.getWidth() * 0.7);
+        int endX = location.getX() + (int) (size.getWidth() * 0.1);
+
+        int y = (int) (location.getY() + size.getHeight() * 0.3);
+
+        performSwipe(startX, y, endX, y);
+    }
+
+    @Description("Свайп вправо")
+    public void swipeRight() {
+        Dimension size = driver.manage().window().getSize();
+
+        int y = size.height / 2;
+
+        int startX = (int) (size.width * 0.2); // слева
+        int endX = (int) (size.width * 0.8);   // справа
+
+        if (startX >= endX) {
+            throw new IllegalArgumentException("SwipeRight: startX must be less than endX");
+        }
+        performSwipe(startX, y, endX, y);
+    }
+
+    @Description("Свайп вправо по элементу")
+    protected void swipeRightOnElement(By locator) {
+        WebElement element = driver.findElement(locator);
+
+        Point location = element.getLocation();
+        Dimension size = element.getSize();
+
+        int startX = location.getX() + (int) (size.getWidth() * 0.1);
+        int endX = location.getX() + (int) (size.getWidth() * 0.9);
+
+        int y = location.getY() + size.getHeight() / 2;
+
+        performSwipe(startX, y, endX, y);
     }
 }

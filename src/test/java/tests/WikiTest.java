@@ -13,7 +13,8 @@ public class WikiTest extends BaseTest {
         getMainPage().clickSearch();
         getMainPage().sendKeys("Java");
         getSearchPage().oopJavaResultClick();
-        Assertions.assertEquals("Java (programming language)", getJavaPage().getTitleText(), "Невалидный заголовок");
+        getJavaPage().closeBtnIfPresent();
+        Assertions.assertEquals("Java (programming language)", getArticlePage().getTitleText());
     }
 
     @Test
@@ -57,5 +58,23 @@ public class WikiTest extends BaseTest {
         getMainPage().clickSearch();
         getMainPage().sendKeys("Java");
         getSearchPage().checkTextJava();
+    }
+
+    @Test
+    @Description("Добавление в Сохраненное статьи Java и ее последующее удаление")
+    public void addToReadingList() {
+        getMainPage().clickSearch();
+        getMainPage().sendKeys("Java");
+        getSearchPage().oopJavaResultClick();
+        getJavaPage().closeBtnIfPresent();
+        getJavaPage().saveBtnClick();
+        getJavaPage().addToListClick();
+        getJavaPage().enterTextInField("Test");
+        getJavaPage().OKBtnClick();
+        getJavaPage().viewListClick();
+        getJavaPage().gotItClickIfPresent();
+        Assertions.assertEquals("Java (programming language)", getArticlePage().getTitleText(), "Невалидный заголовок");
+        getArticlePage().swipeLeftArticleJava();
+        getArticlePage().elementDisappear();
     }
 }
